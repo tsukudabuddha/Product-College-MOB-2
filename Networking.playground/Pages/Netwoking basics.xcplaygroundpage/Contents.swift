@@ -40,12 +40,16 @@ let url = URL(string: "www.google.com/images/434.png")!
 var request = URLRequest(url: url)
 request.httpMethod = "GET"
 
+typealias JSON = [String: Any]
+
 // 3
 let session = URLSession.shared
 
-// 4
+// 4 Perform Network Request
 let downloadTask = session.dataTask(with: request) { (data, response, error) in
-    
+    if let data = data {
+        _ = try! JSONSerialization.jsonObject(with: data, options: .allowFragments)
+    }
 }
 
 // 5

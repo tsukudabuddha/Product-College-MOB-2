@@ -32,12 +32,12 @@ let task = session.dataTask(with: request) { (data, response, error) in
     
     if let data = data {
         let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-        print(json)
+        print(json ?? "no data")
     }
 }
 
 // Don't forget to resume task
-task.resume()
+//task.resume()
 
 
 /*:
@@ -89,9 +89,9 @@ postReq.httpBody = jsonData
 session.dataTask(with: postReq) { (data, resp, err) in
     if let data = data {
         let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments)
-        print(json)
+         print(json ?? "no data")
     }
-}.resume()
+}//.resume()
 
 
 /*:
@@ -102,12 +102,33 @@ session.dataTask(with: postReq) { (data, resp, err) in
 
 */
 
+// 1
+enum httpMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case patch = "PATCH"
+    case delete = "DELETE"
+}
 
+// 2
+var myRequest = URLRequest(url: URL(string: "https://dog.ceo/api/breeds/image/random")!)
+
+myRequest.httpMethod = "GET"
+
+let retrieveData = session.dataTask(with: myRequest) {(data, response, error) in
+    if let data = data {
+        let json = try? JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.allowFragments)
+        guard let jsonNew = json as! JSON? else {return}
+        print(jsonNew["message"]!)
+    }
+}
+
+retrieveData.resume()
 /*: ## Resources
  [URLSessions](https://www.raywenderlich.com/158106/urlsession-tutorial-getting-started)
  */
 
 //: Below is code required to run this playground, it is not a part of the class material
-PlaygroundSupport.PlaygroundPage.current.needsIndefiniteExecution = true
+PlaygroundPage.current.needsIndefiniteExecution = true
 
 //: [Next](@next)
